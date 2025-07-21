@@ -1,0 +1,12 @@
+{
+  "operation": "create_user",
+  "data": {
+    "email": "john.doe@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "address": "123 Main Street, Anytown, USA",
+    "date_of_birth": "1990-01-01",
+    "ssn": "123-45-6789",
+    "bank_account": "1234567890"
+  }
+}

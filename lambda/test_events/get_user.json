@@ -1,0 +1,4 @@
+{
+  "operation": "get_user",
+  "user_id": "test-user-id"
+}

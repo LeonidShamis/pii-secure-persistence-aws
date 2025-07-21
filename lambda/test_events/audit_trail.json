@@ -1,0 +1,5 @@
+{
+  "operation": "audit_trail",
+  "user_id": "test-user-id",
+  "limit": 50
+}
