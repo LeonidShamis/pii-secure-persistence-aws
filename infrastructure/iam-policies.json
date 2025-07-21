@@ -1,0 +1,205 @@
+{
+  "LambdaExecutionPolicy": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "KMSAccess",
+        "Effect": "Allow",
+        "Action": [
+          "kms:Encrypt",
+          "kms:Decrypt",
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey*",
+          "kms:DescribeKey"
+        ],
+        "Resource": [
+          "arn:aws:kms:*:*:key/*"
+        ],
+        "Condition": {
+          "StringEquals": {
+            "kms:via": [
+              "lambda"
+            ]
+          }
+        }
+      },
+      {
+        "Sid": "SecretsManagerAccess",
+        "Effect": "Allow",
+        "Action": [
+          "secretsmanager:GetSecretValue"
+        ],
+        "Resource": [
+          "arn:aws:secretsmanager:*:*:secret:pii-encryption-keys-*",
+          "arn:aws:secretsmanager:*:*:secret:pii-database-credentials-*"
+        ]
+      },
+      {
+        "Sid": "CloudWatchLogsAccess",
+        "Effect": "Allow",
+        "Action": [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        "Resource": "arn:aws:logs:*:*:*"
+      },
+      {
+        "Sid": "VPCAccess",
+        "Effect": "Allow",
+        "Action": [
+          "ec2:CreateNetworkInterface",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DeleteNetworkInterface",
+          "ec2:AttachNetworkInterface",
+          "ec2:DetachNetworkInterface"
+        ],
+        "Resource": "*"
+      }
+    ]
+  },
+  "FastAPIExecutionPolicy": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "LambdaInvokeAccess",
+        "Effect": "Allow",
+        "Action": [
+          "lambda:InvokeFunction"
+        ],
+        "Resource": [
+          "arn:aws:lambda:*:*:function:pii-encryption-handler"
+        ]
+      },
+      {
+        "Sid": "CloudWatchLogsAccess",
+        "Effect": "Allow",
+        "Action": [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        "Resource": "arn:aws:logs:*:*:log-group:/aws/ecs/pii-encryption-*"
+      }
+    ]
+  },
+  "KMSKeyPolicyLevel2": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "EnableIAMUserPermissions",
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": "arn:aws:iam::[ACCOUNT-ID]:root"
+        },
+        "Action": "kms:*",
+        "Resource": "*"
+      },
+      {
+        "Sid": "AllowLambdaServiceAccess",
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": "arn:aws:iam::[ACCOUNT-ID]:role/pii-encryption-lambda-execution-role"
+        },
+        "Action": [
+          "kms:Encrypt",
+          "kms:Decrypt",
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey*",
+          "kms:DescribeKey"
+        ],
+        "Resource": "*",
+        "Condition": {
+          "StringEquals": {
+            "kms:ViaService": "lambda.[REGION].amazonaws.com"
+          }
+        }
+      },
+      {
+        "Sid": "AllowCloudWatchLogsAccess",
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "logs.[REGION].amazonaws.com"
+        },
+        "Action": [
+          "kms:Encrypt",
+          "kms:Decrypt",
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey*",
+          "kms:DescribeKey"
+        ],
+        "Resource": "*"
+      }
+    ]
+  },
+  "KMSKeyPolicyLevel3": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "EnableIAMUserPermissions",
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": "arn:aws:iam::[ACCOUNT-ID]:root"
+        },
+        "Action": "kms:*",
+        "Resource": "*"
+      },
+      {
+        "Sid": "AllowLambdaServiceAccess",
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": "arn:aws:iam::[ACCOUNT-ID]:role/pii-encryption-lambda-execution-role"
+        },
+        "Action": [
+          "kms:Encrypt",
+          "kms:Decrypt",
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey*",
+          "kms:DescribeKey"
+        ],
+        "Resource": "*",
+        "Condition": {
+          "StringEquals": {
+            "kms:ViaService": "lambda.[REGION].amazonaws.com"
+          }
+        }
+      }
+    ]
+  },
+  "TrustPolicyLambda": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "lambda.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  },
+  "TrustPolicyEC2": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "ec2.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  },
+  "TrustPolicyECS": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "ecs-tasks.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  }
+}

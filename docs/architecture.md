@@ -603,7 +603,7 @@ def lambda_handler(event, context):
 ### 3.5 Database (RDS Aurora PostgreSQL)
 
 **Configuration:**
-- Aurora PostgreSQL 14+
+- Aurora PostgreSQL 16+
 - Encryption at rest enabled
 - Automated backups
 - Private subnet deployment
@@ -927,7 +927,7 @@ resource "aws_lambda_function" "encryption_handler" {
 resource "aws_rds_cluster" "pii_database" {
   cluster_identifier      = "pii-database-cluster"
   engine                 = "aurora-postgresql"
-  engine_version         = "14.6"
+  engine_version         = "16.6"
   database_name          = "pii_db"
   master_username        = "postgres"
   master_password        = random_password.db_password.result
