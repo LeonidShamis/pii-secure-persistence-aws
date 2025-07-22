@@ -1,0 +1,482 @@
+{
+  "database_name": "pii_db",
+  "tables": {
+    "encryption_audit": {
+      "table_name": "encryption_audit",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "max_length": null
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "field_name",
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 50
+        },
+        {
+          "name": "pii_level",
+          "type": "integer",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "operation",
+          "type": "character varying",
+          "nullable": false,
+          "default": null,
+          "max_length": 20
+        },
+        {
+          "name": "accessed_by",
+          "type": "character varying",
+          "nullable": false,
+          "default": null,
+          "max_length": 255
+        },
+        {
+          "name": "ip_address",
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 45
+        },
+        {
+          "name": "user_agent",
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "request_id",
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 100
+        },
+        {
+          "name": "success",
+          "type": "boolean",
+          "nullable": true,
+          "default": "true",
+          "max_length": null
+        },
+        {
+          "name": "error_message",
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "error_code",
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 50
+        },
+        {
+          "name": "operation_duration_ms",
+          "type": "integer",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "data_classification",
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 20
+        },
+        {
+          "name": "retention_policy",
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 50
+        },
+        {
+          "name": "accessed_at",
+          "type": "timestamp with time zone",
+          "nullable": true,
+          "default": "now()",
+          "max_length": null
+        }
+      ],
+      "primary_key": [
+        "id"
+      ],
+      "foreign_keys": [
+        {
+          "column_name": "user_id",
+          "foreign_table_name": "users",
+          "foreign_column_name": "id"
+        }
+      ]
+    },
+    "encryption_metadata": {
+      "table_name": "encryption_metadata",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "max_length": null
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "field_name",
+          "type": "character varying",
+          "nullable": false,
+          "default": null,
+          "max_length": 50
+        },
+        {
+          "name": "pii_level",
+          "type": "integer",
+          "nullable": false,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "app_key_version",
+          "type": "integer",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "kms_key_alias",
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 100
+        },
+        {
+          "name": "encryption_algorithm",
+          "type": "character varying",
+          "nullable": true,
+          "default": "'AES-256-GCM'::character varying",
+          "max_length": 50
+        },
+        {
+          "name": "encrypted_at",
+          "type": "timestamp with time zone",
+          "nullable": true,
+          "default": "now()",
+          "max_length": null
+        }
+      ],
+      "primary_key": [
+        "id"
+      ],
+      "foreign_keys": [
+        {
+          "column_name": "user_id",
+          "foreign_table_name": "users",
+          "foreign_column_name": "id"
+        }
+      ]
+    },
+    "key_rotation_log": {
+      "table_name": "key_rotation_log",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "max_length": null
+        },
+        {
+          "name": "key_type",
+          "type": "character varying",
+          "nullable": false,
+          "default": null,
+          "max_length": 50
+        },
+        {
+          "name": "key_alias",
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 100
+        },
+        {
+          "name": "old_version",
+          "type": "integer",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "new_version",
+          "type": "integer",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "rotation_reason",
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 100
+        },
+        {
+          "name": "rotation_started_at",
+          "type": "timestamp with time zone",
+          "nullable": true,
+          "default": "now()",
+          "max_length": null
+        },
+        {
+          "name": "rotation_completed_at",
+          "type": "timestamp with time zone",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "rotation_status",
+          "type": "character varying",
+          "nullable": true,
+          "default": "'in_progress'::character varying",
+          "max_length": 20
+        },
+        {
+          "name": "records_affected",
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null
+        },
+        {
+          "name": "fields_affected",
+          "type": "ARRAY",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "error_message",
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "rollback_completed_at",
+          "type": "timestamp with time zone",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "initiated_by",
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 255
+        },
+        {
+          "name": "rotation_method",
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 50
+        }
+      ],
+      "primary_key": [
+        "id"
+      ],
+      "foreign_keys": []
+    },
+    "system_config": {
+      "table_name": "system_config",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "max_length": null
+        },
+        {
+          "name": "config_key",
+          "type": "character varying",
+          "nullable": false,
+          "default": null,
+          "max_length": 100
+        },
+        {
+          "name": "config_value",
+          "type": "text",
+          "nullable": false,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "config_type",
+          "type": "character varying",
+          "nullable": true,
+          "default": "'string'::character varying",
+          "max_length": 20
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "is_encrypted",
+          "type": "boolean",
+          "nullable": true,
+          "default": "false",
+          "max_length": null
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "nullable": true,
+          "default": "now()",
+          "max_length": null
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "nullable": true,
+          "default": "now()",
+          "max_length": null
+        }
+      ],
+      "primary_key": [
+        "id"
+      ],
+      "foreign_keys": []
+    },
+    "users": {
+      "table_name": "users",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "max_length": null
+        },
+        {
+          "name": "email",
+          "type": "character varying",
+          "nullable": false,
+          "default": null,
+          "max_length": 255
+        },
+        {
+          "name": "first_name",
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 100
+        },
+        {
+          "name": "last_name",
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 100
+        },
+        {
+          "name": "phone",
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 20
+        },
+        {
+          "name": "address_encrypted",
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "date_of_birth_encrypted",
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "ip_address_encrypted",
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "ssn_encrypted",
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "bank_account_encrypted",
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "credit_card_encrypted",
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "max_length": null
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "nullable": true,
+          "default": "now()",
+          "max_length": null
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "nullable": true,
+          "default": "now()",
+          "max_length": null
+        }
+      ],
+      "primary_key": [
+        "id"
+      ],
+      "foreign_keys": []
+    }
+  }
+}

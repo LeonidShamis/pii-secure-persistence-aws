@@ -1,0 +1,21 @@
+# Lambda-specific .gitignore
+
+# Lambda Deployment Packages (CRITICAL - DO NOT COMMIT)
+*.zip
+pii-encryption-lambda*.zip
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+
+# Generated files
+lambda_function_generated.py.backup
+
+# Development artifacts
+test-output/
+debug-logs/
+
+# Cleanup script (already run)
+cleanup_lambda_folder.py
