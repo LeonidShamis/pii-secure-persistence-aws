@@ -42,6 +42,12 @@ env/
 lambda/*.zip
 infrastructure/*.zip
 
+# Docker Build Artifacts (DO NOT COMMIT - too large for GitHub)
+*.tar
+backend/*.tar
+*/docker-build/
+docker-build/
+
 # AWS Credentials (NEVER COMMIT)
 credentials
 config

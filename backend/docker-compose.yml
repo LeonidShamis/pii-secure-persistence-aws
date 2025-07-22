@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  pii-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: pii-backend
+    ports:
+      - "8000:8000"
+    environment:
+      # Application settings
+      - PII_ENVIRONMENT=development
+      - PII_DEBUG=true
+      - PII_API_KEY=dev-api-key-change-in-production
+      - PII_ALLOWED_ORIGINS=["http://localhost:3000", "http://localhost:5173", "http://localhost:8080"]
+      
+      # AWS settings (credentials from ~/.aws volume mount)
+      - AWS_REGION=us-east-1
+      
+      # Lambda settings
+      - PII_LAMBDA_FUNCTION_NAME=pii-encryption-handler
+      - PII_LAMBDA_TIMEOUT=30
+      - PII_LAMBDA_RETRY_ATTEMPTS=3
+      
+      # Logging
+      - PII_LOG_LEVEL=INFO
+    
+    volumes:
+      # Mount AWS credentials if using ~/.aws
+      - ~/.aws:/home/appuser/.aws:ro
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    restart: unless-stopped
+
+  # Development variant with live reload
+  pii-backend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    container_name: pii-backend-dev
+    ports:
+      - "8001:8000"
+    environment:
+      - PII_ENVIRONMENT=development
+      - PII_DEBUG=true
+      - PII_API_KEY=dev-api-key-change-in-production
+      - AWS_REGION=us-east-1
+      - PII_LAMBDA_FUNCTION_NAME=pii-encryption-handler
+    volumes:
+      - ./src:/app/src:ro
+      - ~/.aws:/root/.aws:ro
+    command: ["uvicorn", "pii_backend.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
+    profiles:
+      - dev

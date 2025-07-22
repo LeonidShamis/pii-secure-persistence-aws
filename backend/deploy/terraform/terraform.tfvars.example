@@ -1,0 +1,22 @@
+# AWS Configuration
+aws_region = "us-east-1"
+environment = "dev"
+
+# API Configuration
+api_key = "your-secure-api-key-here"  # Change this to a secure random string
+
+# Container Configuration  
+container_image_uri = "123456789012.dkr.ecr.us-east-1.amazonaws.com/pii-backend:latest"
+# For Docker Hub: "your-dockerhub-username/pii-backend:latest"
+
+# Lambda Integration
+lambda_function_name = "pii-encryption-handler"  # Must match your Lambda function name
+
+# CORS Configuration
+allowed_origins = [
+  "*"  # Allow all origins for prototype - restrict in production!
+  # For production, use specific domains:
+  # "https://your-frontend-domain.com",
+  # "https://localhost:3000",  # For local development
+  # "https://localhost:5173"   # For Vite dev server
+]

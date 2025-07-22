@@ -1,0 +1,22 @@
+version: 1.0
+runtime: docker
+build:
+  commands:
+    # No build commands needed - using pre-built Docker image
+    echo: "Using pre-built Docker image"
+run:
+  runtime-version: latest
+  command: gunicorn pii_backend.main:app -w 2 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --access-logfile - --error-logfile -
+  network:
+    port: 8000
+    env:
+      # App Runner will inject these from service configuration
+      - PII_ENVIRONMENT
+      - PII_DEBUG
+      - PII_API_KEY
+      - PII_ALLOWED_ORIGINS
+      - AWS_REGION
+      - PII_LAMBDA_FUNCTION_NAME
+      - PII_LAMBDA_TIMEOUT
+      - PII_LAMBDA_RETRY_ATTEMPTS
+      - PII_LOG_LEVEL

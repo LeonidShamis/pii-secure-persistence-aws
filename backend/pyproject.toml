@@ -1,0 +1,32 @@
+[project]
+name = "pii-backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Leonid Shamis", email = "shamis.leonid@gmail.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "boto3>=1.39.10",
+    "email-validator>=2.2.0",
+    "fastapi>=0.116.1",
+    "gunicorn>=23.0.0",
+    "pydantic>=2.11.7",
+    "pydantic-settings>=2.10.1",
+    "python-dotenv>=1.1.1",
+    "uvicorn>=0.35.0",
+]
+
+[project.scripts]
+pii-backend = "pii_backend:main"
+
+[build-system]
+requires = ["uv_build>=0.8.0,<0.9"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=8.4.1",
+]
