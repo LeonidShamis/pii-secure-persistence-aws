@@ -16,7 +16,7 @@ GET {{$dotenv PII_FASTAPI_BACKEND_URL}}/users
 Authorization: Bearer {{$dotenv PII_API_KEY}}
 
 ### user details - authenticated with API key
-GET {{$dotenv PII_FASTAPI_BACKEND_URL}}/users/5b32ebe4-3e64-4a89-a882-d0a063c80f5c
+GET {{$dotenv PII_FASTAPI_BACKEND_URL}}/users/0306ce5a-f309-47b2-b490-5345a605ef24
 Authorization: Bearer {{$dotenv PII_API_KEY}}
 
 ### create user - authenticated with API key

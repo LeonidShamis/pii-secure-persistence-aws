@@ -6,10 +6,14 @@ A defensive security system prototype demonstrating secure storage and handling 
 
 ## 🚧 Current Status
 
-**Phase 2 of 7 phases completed**
+**Phase 5 of 7 phases completed (71% progress)**
 - ✅ **Phase 1**: Database Foundation (Complete)
 - ✅ **Phase 2**: AWS Security Infrastructure (Complete)
-- 🔄 **Phase 3**: Lambda Encryption Service (Next)
+- ✅ **Phase 3**: Lambda Encryption Service (Complete)
+- ✅ **Phase 4**: FastAPI Backend with App Runner (Complete)
+- ✅ **Phase 5**: API Gateway (Complete - replaced by App Runner)
+- 🔄 **Phase 6**: React Frontend (Next)
+- ⏸️ **Phase 7**: Integration Testing & Validation (Pending)
 
 See [Implementation Plan](docs/implementation-plan.md) for detailed progress.
 
@@ -105,9 +109,18 @@ This project implements a three-tier PII classification and encryption system de
 │   ├── generate-keys.py         # Key generation utilities
 │   ├── aws-console-setup-guide.md  # Manual AWS setup guide
 │   └── README.md                # Infrastructure documentation
-├── lambda/                       # (Coming in Phase 3)
-├── backend/                      # (Coming in Phase 4)
-└── frontend/                     # (Coming in Phase 5)
+├── lambda/                       # ✅ Lambda encryption service
+│   ├── src/pii_encryption_lambda/  # Complete 3-tier encryption
+│   ├── pyproject.toml           # Python dependencies (uv)
+│   ├── deploy.py                # AWS deployment script
+│   └── README.md                # Lambda documentation
+├── backend/                      # ✅ FastAPI REST API
+│   ├── src/pii_backend/         # FastAPI application
+│   ├── deploy/                  # AWS App Runner deployment
+│   ├── Dockerfile               # Production container
+│   ├── pyproject.toml           # Python dependencies (uv)
+│   └── README.md                # Backend documentation
+└── frontend/                     # (Coming in Phase 6)
 ```
 
 ## Quick Start
@@ -148,19 +161,21 @@ cat database/setup.md
 ## Development Status
 
 ### Completed ✅
-- Complete database schema with three-tier encryption support
-- Comprehensive AWS infrastructure setup guide
-- Key generation utilities
-- Project documentation and architecture
+- **Database Foundation**: Complete PostgreSQL schema with three-tier encryption support
+- **AWS Security Infrastructure**: KMS keys, Secrets Manager, IAM roles with least privilege
+- **Lambda Encryption Service**: Complete 3-tier encryption with audit logging and key rotation
+- **FastAPI Backend**: REST API with 9 endpoints, async Lambda integration, production deployment
+- **AWS App Runner Deployment**: Production-ready container hosting with auto-scaling
+- **Security & Authentication**: API key auth, CORS, comprehensive error handling
+- **Infrastructure as Code**: Terraform deployment automation and Docker containerization
 
 ### In Progress 🔄
-- Lambda encryption service implementation
+- React frontend with visual PII level indicators
 
 ### Planned 📋
-- FastAPI backend implementation
-- React frontend with visual PII indicators
-- Integration testing
-- Security validation
+- Complete React SPA with security-focused UI design
+- Integration testing and end-to-end validation
+- Performance optimization and security hardening
 
 ## Security Considerations
 
@@ -186,8 +201,9 @@ Estimated monthly AWS costs for prototype:
 - KMS API calls: ~$1
 - Secrets Manager: $0.80
 - Lambda: ~$1
+- App Runner: $5-15 (scales to zero)
 - RDS Aurora: ~$60
-- **Total: ~$65/month**
+- **Total: ~$70-80/month**
 
 ## Contributing
 
