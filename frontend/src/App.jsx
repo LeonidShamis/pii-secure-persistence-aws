@@ -6,6 +6,7 @@
 import { useState } from 'react'
 import UserForm from './components/UserForm'
 import UserDisplay from './components/UserDisplay'
+import UserList from './components/UserList'
 import SecurityInfo from './components/SecurityInfo'
 import './App.css'
 
@@ -44,6 +45,12 @@ function App() {
           📝 Create User
         </button>
         <button 
+          className={`nav-button ${currentView === 'list' ? 'active' : ''}`}
+          onClick={() => setCurrentView('list')}
+        >
+          📋 List Users
+        </button>
+        <button 
           className={`nav-button ${currentView === 'display' ? 'active' : ''}`}
           onClick={() => setCurrentView('display')}
           disabled={!selectedUserId}
@@ -61,6 +68,10 @@ function App() {
       <main className="app-main">
         {currentView === 'form' && (
           <UserForm onUserCreated={handleUserCreated} />
+        )}
+        
+        {currentView === 'list' && (
+          <UserList onViewUser={handleViewUser} />
         )}
         
         {currentView === 'display' && (

@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react'
-import { Send, RefreshCw, AlertCircle, CheckCircle } from 'lucide-react'
+import { Send, RefreshCw, AlertCircle, CheckCircle, Database, ChevronDown } from 'lucide-react'
 import PIIField from './PIIField'
 import { api } from '../services/api'
 
@@ -31,6 +31,7 @@ function UserForm({ onUserCreated }) {
   const [validation, setValidation] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitResult, setSubmitResult] = useState(null)
+  const [showDummyMenu, setShowDummyMenu] = useState(false)
 
   const handleFieldChange = (fieldName, value) => {
     setFormData(prev => ({
@@ -52,6 +53,65 @@ function UserForm({ onUserCreated }) {
       ...prev,
       [fieldName]: !prev[fieldName]
     }))
+  }
+
+  // Dummy data generators
+  const dummyDataSets = {
+    'John Doe - Complete Profile': {
+      email: 'john.doe@example.com',
+      first_name: 'John',
+      last_name: 'Doe',
+      phone: '+1-555-0123',
+      address: '123 Main Street, Anytown, NY 12345',
+      date_of_birth: '1985-03-15',
+      ip_address: '192.168.1.100',
+      ssn: '123-45-6789',
+      bank_account: '9876543210',
+      credit_card: '4111-1111-1111-1111'
+    },
+    'Sarah Johnson - Partial Profile': {
+      email: 'sarah.johnson@company.com',
+      first_name: 'Sarah',
+      last_name: 'Johnson',
+      phone: '+1-555-0198',
+      address: '456 Oak Avenue, Springfield, CA 90210',
+      date_of_birth: '1992-07-22',
+      ssn: '987-65-4321'
+    },
+    'Michael Chen - Business Profile': {
+      email: 'michael.chen@tech.com',
+      first_name: 'Michael',
+      last_name: 'Chen',
+      phone: '+1-555-0277',
+      address: '789 Tech Drive, Silicon Valley, CA 94301',
+      date_of_birth: '1988-11-08',
+      ip_address: '10.0.0.45',
+      bank_account: '1234567890'
+    },
+    'Emma Williams - Sensitive Data': {
+      email: 'emma.williams@private.org',
+      first_name: 'Emma',
+      last_name: 'Williams',
+      phone: '+1-555-0356',
+      address: '321 Privacy Lane, Secure City, TX 78701',
+      date_of_birth: '1990-12-03',
+      ip_address: '172.16.0.10',
+      ssn: '456-78-9012',
+      bank_account: '5555666677778888',
+      credit_card: '5555-5555-5555-4444'
+    }
+  }
+
+  const handleDummyDataSelect = (dataSetName) => {
+    const selectedData = dummyDataSets[dataSetName]
+    setFormData(selectedData)
+    setShowDummyMenu(false)
+    setSubmitResult(null)
+    
+    // Clear any existing validation errors
+    setValidation({})
+    
+    console.log(`🎭 Loaded dummy data: ${dataSetName}`)
   }
 
   const validateForm = () => {
@@ -161,8 +221,44 @@ function UserForm({ onUserCreated }) {
   return (
     <div className="user-form">
       <div className="form-header">
-        <h2>Create New User</h2>
-        <p>Enter user information. Fields are automatically encrypted based on their sensitivity level.</p>
+        <div className="header-content">
+          <div className="header-text">
+            <h2>Create New User</h2>
+            <p>Enter user information. Fields are automatically encrypted based on their sensitivity level.</p>
+          </div>
+          <div className="header-actions">
+            <div className="dummy-data-menu">
+              <button
+                type="button"
+                className="btn btn-secondary dummy-data-trigger"
+                onClick={() => setShowDummyMenu(!showDummyMenu)}
+              >
+                <Database size={16} />
+                Test Data
+                <ChevronDown size={16} className={showDummyMenu ? 'rotated' : ''} />
+              </button>
+              
+              {showDummyMenu && (
+                <div className="dummy-data-dropdown">
+                  <div className="dropdown-header">
+                    <strong>Load Test Data</strong>
+                    <p>Populate form with realistic sample data for testing</p>
+                  </div>
+                  {Object.keys(dummyDataSets).map((dataSetName) => (
+                    <button
+                      key={dataSetName}
+                      type="button"
+                      className="dropdown-item"
+                      onClick={() => handleDummyDataSelect(dataSetName)}
+                    >
+                      {dataSetName}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       {submitResult && (
