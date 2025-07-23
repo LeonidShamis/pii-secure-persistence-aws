@@ -70,16 +70,16 @@ function UserForm({ onUserCreated }) {
     const city = cities[Math.floor(Math.random() * cities.length)]
     const state = states[Math.floor(Math.random() * states.length)]
     
-    // Generate random numbers
-    const randomPhone = `+1-555-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`
+    // Generate random numbers with proper validation formats
+    const randomPhone = `${Math.floor(Math.random() * 900) + 100}${Math.floor(Math.random() * 900) + 100}${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`
     const randomZip = String(Math.floor(Math.random() * 90000) + 10000)
-    const randomYear = Math.floor(Math.random() * 40) + 1960 // 1960-1999
+    const randomYear = Math.floor(Math.random() * 30) + 1970 // 1970-1999 for valid ages
     const randomMonth = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')
     const randomDay = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')
-    const randomSSN = `${String(Math.floor(Math.random() * 900) + 100)}-${String(Math.floor(Math.random() * 90) + 10)}-${String(Math.floor(Math.random() * 9000) + 1000)}`
+    const randomSSN = `${String(Math.floor(Math.random() * 900) + 100)}${String(Math.floor(Math.random() * 90) + 10)}${String(Math.floor(Math.random() * 9000) + 1000)}`
     const randomBank = String(Math.floor(Math.random() * 9000000000) + 1000000000)
-    const randomCC = `${String(Math.floor(Math.random() * 9000) + 1000)}-${String(Math.floor(Math.random() * 9000) + 1000)}-${String(Math.floor(Math.random() * 9000) + 1000)}-${String(Math.floor(Math.random() * 9000) + 1000)}`
-    const randomIP = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`
+    const randomCC = `${String(Math.floor(Math.random() * 9000) + 1000)}${String(Math.floor(Math.random() * 9000) + 1000)}${String(Math.floor(Math.random() * 9000) + 1000)}${String(Math.floor(Math.random() * 9000) + 1000)}`
+    const randomIP = `${Math.floor(Math.random() * 255) + 1}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 254) + 1}`
     
     return {
       email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@${domain}`,
@@ -172,14 +172,17 @@ function UserForm({ onUserCreated }) {
       
       const response = await api.createUser(submitData)
       
+      // Handle different response structures
+      const userId = response.user_id || response.data?.user_id || response.id
+      
       setSubmitResult({
         type: 'success',
-        message: `User created successfully! ID: ${response.data.user_id}`,
-        userId: response.data.user_id
+        message: `User created successfully! ID: ${userId}`,
+        userId: userId
       })
 
       // Notify parent component
-      onUserCreated(response.data.user_id)
+      onUserCreated(userId)
 
     } catch (error) {
       console.error('❌ Failed to create user:', error)
