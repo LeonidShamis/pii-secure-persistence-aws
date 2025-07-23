@@ -89,6 +89,13 @@ class UserData(BaseModel):
     created_at: str
 
 
+class UserCreated(BaseModel):
+    """User creation response data"""
+    user_id: str
+    message: str
+    processed_fields: int
+
+
 class UserListItem(BaseModel):
     """User list item (basic info only)"""
     user_id: str
@@ -135,6 +142,11 @@ class APIResponse(BaseModel):
 class UserResponse(APIResponse):
     """User operation response"""
     data: Optional[UserData] = None
+
+
+class UserCreateResponse(APIResponse):
+    """User creation response"""
+    data: Optional[UserCreated] = None
 
 
 class UserListResponse(APIResponse):

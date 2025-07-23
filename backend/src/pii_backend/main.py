@@ -17,6 +17,7 @@ from .lambda_client import LambdaClient
 from .models import (
     UserCreateRequest, 
     UserResponse, 
+    UserCreateResponse,
     UserListResponse, 
     AuditTrailResponse,
     HealthResponse,
@@ -61,8 +62,8 @@ app = FastAPI(
     title="PII Secure Persistence API",
     description="Secure API for handling Personally Identifiable Information with three-tier encryption",
     version="1.0.0",
-    docs_url="/docs" if settings.environment != "production" else None,
-    redoc_url="/redoc" if settings.environment != "production" else None,
+    docs_url="/docs",  # Always enable for prototype - disable in true production
+    redoc_url="/redoc",  # Always enable for prototype - disable in true production
     lifespan=lifespan
 )
 
@@ -121,7 +122,7 @@ async def health_check(
             error=str(e)
         )
 
-@app.post("/users", response_model=UserResponse)
+@app.post("/users", response_model=UserCreateResponse)
 async def create_user(
     user_data: UserCreateRequest,
     lambda_client: LambdaClient = Depends(get_lambda_client),
@@ -132,10 +133,15 @@ async def create_user(
         result = await lambda_client.create_user(user_data.model_dump(exclude_unset=True))
         
         if result.get('success'):
-            return UserResponse(
+            lambda_result = result.get('result', {})
+            return UserCreateResponse(
                 success=True,
                 message="User created successfully",
-                data=result.get('result', {})
+                data={
+                    'user_id': lambda_result.get('user_id'),
+                    'message': lambda_result.get('message', 'User created and encrypted successfully'),
+                    'processed_fields': lambda_result.get('processed_fields', 0)
+                }
             )
         else:
             raise HTTPException(

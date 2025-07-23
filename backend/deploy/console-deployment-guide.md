@@ -290,11 +290,18 @@ Once deployment completes:
 ```json
 {
   "success": true,
-  "status": "healthy", 
+  "status": "healthy",
   "components": {
-    "lambda": "connected",
-    "database": "accessible"
-  }
+    "backend": "healthy",
+    "lambda": {
+      "lambda": "healthy",
+      "kms": "healthy",
+      "secrets_manager": "healthy",
+      "database": "healthy"
+    }
+  },
+  "timestamp": "2025-07-23T01:06:00.125899",
+  "error": null
 }
 ```
 
@@ -309,8 +316,10 @@ Once deployment completes:
   "message": "PII Secure Persistence API",
   "data": {
     "version": "1.0.0",
-    "environment": "production"
-  }
+    "status": "healthy",
+    "documentation": "/docs"
+  },
+  "error": null
 }
 ```
 
