@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react'
-import { Send, RefreshCw, AlertCircle, CheckCircle, Database, ChevronDown } from 'lucide-react'
+import { Send, RefreshCw, AlertCircle, CheckCircle, Database } from 'lucide-react'
 import PIIField from './PIIField'
 import { api } from '../services/api'
 
@@ -31,7 +31,6 @@ function UserForm({ onUserCreated }) {
   const [validation, setValidation] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitResult, setSubmitResult] = useState(null)
-  const [showDummyMenu, setShowDummyMenu] = useState(false)
 
   const handleFieldChange = (fieldName, value) => {
     setFormData(prev => ({
@@ -55,63 +54,56 @@ function UserForm({ onUserCreated }) {
     }))
   }
 
-  // Dummy data generators
-  const dummyDataSets = {
-    'John Doe - Complete Profile': {
-      email: 'john.doe@example.com',
-      first_name: 'John',
-      last_name: 'Doe',
-      phone: '+1-555-0123',
-      address: '123 Main Street, Anytown, NY 12345',
-      date_of_birth: '1985-03-15',
-      ip_address: '192.168.1.100',
-      ssn: '123-45-6789',
-      bank_account: '9876543210',
-      credit_card: '4111-1111-1111-1111'
-    },
-    'Sarah Johnson - Partial Profile': {
-      email: 'sarah.johnson@company.com',
-      first_name: 'Sarah',
-      last_name: 'Johnson',
-      phone: '+1-555-0198',
-      address: '456 Oak Avenue, Springfield, CA 90210',
-      date_of_birth: '1992-07-22',
-      ssn: '987-65-4321'
-    },
-    'Michael Chen - Business Profile': {
-      email: 'michael.chen@tech.com',
-      first_name: 'Michael',
-      last_name: 'Chen',
-      phone: '+1-555-0277',
-      address: '789 Tech Drive, Silicon Valley, CA 94301',
-      date_of_birth: '1988-11-08',
-      ip_address: '10.0.0.45',
-      bank_account: '1234567890'
-    },
-    'Emma Williams - Sensitive Data': {
-      email: 'emma.williams@private.org',
-      first_name: 'Emma',
-      last_name: 'Williams',
-      phone: '+1-555-0356',
-      address: '321 Privacy Lane, Secure City, TX 78701',
-      date_of_birth: '1990-12-03',
-      ip_address: '172.16.0.10',
-      ssn: '456-78-9012',
-      bank_account: '5555666677778888',
-      credit_card: '5555-5555-5555-4444'
+  // Random data generators
+  const generateRandomData = () => {
+    const firstNames = ['John', 'Sarah', 'Michael', 'Emma', 'David', 'Lisa', 'James', 'Maria', 'Robert', 'Jennifer']
+    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez']
+    const domains = ['example.com', 'company.com', 'tech.org', 'business.net', 'private.org']
+    const streets = ['Main Street', 'Oak Avenue', 'Tech Drive', 'Privacy Lane', 'First Street', 'Second Avenue', 'Park Road', 'Center Street']
+    const cities = ['Anytown', 'Springfield', 'Silicon Valley', 'Secure City', 'Downtown', 'Riverside', 'Greenfield', 'Oakville']
+    const states = ['NY', 'CA', 'TX', 'FL', 'IL', 'PA', 'OH', 'GA', 'NC', 'MI']
+    
+    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)]
+    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)]
+    const domain = domains[Math.floor(Math.random() * domains.length)]
+    const street = streets[Math.floor(Math.random() * streets.length)]
+    const city = cities[Math.floor(Math.random() * cities.length)]
+    const state = states[Math.floor(Math.random() * states.length)]
+    
+    // Generate random numbers
+    const randomPhone = `+1-555-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`
+    const randomZip = String(Math.floor(Math.random() * 90000) + 10000)
+    const randomYear = Math.floor(Math.random() * 40) + 1960 // 1960-1999
+    const randomMonth = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')
+    const randomDay = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')
+    const randomSSN = `${String(Math.floor(Math.random() * 900) + 100)}-${String(Math.floor(Math.random() * 90) + 10)}-${String(Math.floor(Math.random() * 9000) + 1000)}`
+    const randomBank = String(Math.floor(Math.random() * 9000000000) + 1000000000)
+    const randomCC = `${String(Math.floor(Math.random() * 9000) + 1000)}-${String(Math.floor(Math.random() * 9000) + 1000)}-${String(Math.floor(Math.random() * 9000) + 1000)}-${String(Math.floor(Math.random() * 9000) + 1000)}`
+    const randomIP = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`
+    
+    return {
+      email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@${domain}`,
+      first_name: firstName,
+      last_name: lastName,
+      phone: randomPhone,
+      address: `${Math.floor(Math.random() * 9999) + 1} ${street}, ${city}, ${state} ${randomZip}`,
+      date_of_birth: `${randomYear}-${randomMonth}-${randomDay}`,
+      ip_address: randomIP,
+      ssn: randomSSN,
+      bank_account: randomBank,
+      credit_card: randomCC
     }
   }
 
-  const handleDummyDataSelect = (dataSetName) => {
-    const selectedData = dummyDataSets[dataSetName]
-    setFormData(selectedData)
-    setShowDummyMenu(false)
+  const handlePopulateData = () => {
+    const randomData = generateRandomData()
+    setFormData(randomData)
     setSubmitResult(null)
     
     // Clear any existing validation errors
     setValidation({})
     
-    console.log(`🎭 Loaded dummy data: ${dataSetName}`)
+    console.log(`🎭 Generated random test data for: ${randomData.first_name} ${randomData.last_name}`)
   }
 
   const validateForm = () => {
@@ -227,36 +219,15 @@ function UserForm({ onUserCreated }) {
             <p>Enter user information. Fields are automatically encrypted based on their sensitivity level.</p>
           </div>
           <div className="header-actions">
-            <div className="dummy-data-menu">
-              <button
-                type="button"
-                className="btn btn-secondary dummy-data-trigger"
-                onClick={() => setShowDummyMenu(!showDummyMenu)}
-              >
-                <Database size={16} />
-                Test Data
-                <ChevronDown size={16} className={showDummyMenu ? 'rotated' : ''} />
-              </button>
-              
-              {showDummyMenu && (
-                <div className="dummy-data-dropdown">
-                  <div className="dropdown-header">
-                    <strong>Load Test Data</strong>
-                    <p>Populate form with realistic sample data for testing</p>
-                  </div>
-                  {Object.keys(dummyDataSets).map((dataSetName) => (
-                    <button
-                      key={dataSetName}
-                      type="button"
-                      className="dropdown-item"
-                      onClick={() => handleDummyDataSelect(dataSetName)}
-                    >
-                      {dataSetName}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={handlePopulateData}
+              disabled={isSubmitting}
+            >
+              <Database size={16} />
+              Populate Data
+            </button>
           </div>
         </div>
       </div>
